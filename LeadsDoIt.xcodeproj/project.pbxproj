@@ -18,6 +18,10 @@
 		224E4A292B5312C400F92F26 /* UIView_SHADOW.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A282B5312C400F92F26 /* UIView_SHADOW.swift */; };
 		224E4A2B2B53165A00F92F26 /* PickerWithToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A2A2B53165A00F92F26 /* PickerWithToolbar.swift */; };
 		224E4A2F2B54204D00F92F26 /* CustomDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A2E2B54204D00F92F26 /* CustomDatePicker.swift */; };
+		224E4A322B544E0C00F92F26 /* RealmHistoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A312B544E0C00F92F26 /* RealmHistoryService.swift */; };
+		224E4A352B544E6A00F92F26 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 224E4A342B544E6A00F92F26 /* Realm */; };
+		224E4A372B544E6A00F92F26 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 224E4A362B544E6A00F92F26 /* RealmSwift */; };
+		224E4A392B544F3D00F92F26 /* RealmService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A382B544F3D00F92F26 /* RealmService.swift */; };
 		227648F42B500DC5001453CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227648F32B500DC5001453CB /* AppDelegate.swift */; };
 		227648F62B500DC5001453CB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227648F52B500DC5001453CB /* SceneDelegate.swift */; };
 		227648F82B500DC5001453CB /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227648F72B500DC5001453CB /* MainVC.swift */; };
@@ -50,6 +54,8 @@
 		224E4A282B5312C400F92F26 /* UIView_SHADOW.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView_SHADOW.swift; sourceTree = "<group>"; };
 		224E4A2A2B53165A00F92F26 /* PickerWithToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerWithToolbar.swift; sourceTree = "<group>"; };
 		224E4A2E2B54204D00F92F26 /* CustomDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDatePicker.swift; sourceTree = "<group>"; };
+		224E4A312B544E0C00F92F26 /* RealmHistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmHistoryService.swift; sourceTree = "<group>"; };
+		224E4A382B544F3D00F92F26 /* RealmService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmService.swift; sourceTree = "<group>"; };
 		227648F02B500DC5001453CB /* LeadsDoIt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeadsDoIt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		227648F32B500DC5001453CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		227648F52B500DC5001453CB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -78,6 +84,8 @@
 			files = (
 				224E4A1C2B516EF300F92F26 /* Alamofire in Frameworks */,
 				227649092B5011D0001453CB /* Lottie in Frameworks */,
+				224E4A352B544E6A00F92F26 /* Realm in Frameworks */,
+				224E4A372B544E6A00F92F26 /* RealmSwift in Frameworks */,
 				2276490C2B5011DF001453CB /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -132,6 +140,8 @@
 			isa = PBXGroup;
 			children = (
 				224E4A1E2B516F8400F92F26 /* MarsAPIService.swift */,
+				224E4A312B544E0C00F92F26 /* RealmHistoryService.swift */,
+				224E4A382B544F3D00F92F26 /* RealmService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -252,6 +262,8 @@
 				227649082B5011D0001453CB /* Lottie */,
 				2276490B2B5011DF001453CB /* SnapKit */,
 				224E4A1B2B516EF300F92F26 /* Alamofire */,
+				224E4A342B544E6A00F92F26 /* Realm */,
+				224E4A362B544E6A00F92F26 /* RealmSwift */,
 			);
 			productName = LeadsDoIt;
 			productReference = 227648F02B500DC5001453CB /* LeadsDoIt.app */;
@@ -285,6 +297,7 @@
 				227649072B5011D0001453CB /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				2276490A2B5011DF001453CB /* XCRemoteSwiftPackageReference "SnapKit" */,
 				224E4A1A2B516EF300F92F26 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				224E4A332B544E6A00F92F26 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			productRefGroup = 227648F12B500DC5001453CB /* Products */;
 			projectDirPath = "";
@@ -323,6 +336,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				22AB22872B5017AC0046C991 /* UIColor_HEX.swift in Sources */,
+				224E4A392B544F3D00F92F26 /* RealmService.swift in Sources */,
 				224E4A232B519B3100F92F26 /* FullScreenImageVC.swift in Sources */,
 				22AB22832B5017200046C991 /* DesignSystem.swift in Sources */,
 				224E4A2B2B53165A00F92F26 /* PickerWithToolbar.swift in Sources */,
@@ -330,6 +344,7 @@
 				224E4A2F2B54204D00F92F26 /* CustomDatePicker.swift in Sources */,
 				224E4A272B52EC9600F92F26 /* HistoryCardTVC.swift in Sources */,
 				227648F82B500DC5001453CB /* MainVC.swift in Sources */,
+				224E4A322B544E0C00F92F26 /* RealmHistoryService.swift in Sources */,
 				227648F42B500DC5001453CB /* AppDelegate.swift in Sources */,
 				224E4A112B50579E00F92F26 /* Methods.swift in Sources */,
 				224E4A1F2B516F8400F92F26 /* MarsAPIService.swift in Sources */,
@@ -561,6 +576,14 @@
 				minimumVersion = 5.8.1;
 			};
 		};
+		224E4A332B544E6A00F92F26 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		227649072B5011D0001453CB /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios";
@@ -584,6 +607,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 224E4A1A2B516EF300F92F26 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		224E4A342B544E6A00F92F26 /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 224E4A332B544E6A00F92F26 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = Realm;
+		};
+		224E4A362B544E6A00F92F26 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 224E4A332B544E6A00F92F26 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
 		};
 		227649082B5011D0001453CB /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;

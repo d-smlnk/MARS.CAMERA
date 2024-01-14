@@ -47,13 +47,13 @@ class MainVC: UIViewController, OpenImageDelegate, SendQueryDelegate {
     
     private var roverData: MarsRoverResponseModel?
     
-    private let todaysDateLabel = UILabel()
+    private let dateLabel = UILabel()
     
     private let photoTableView = UITableView()
     private let roverFilterBtn = UIButton()
     private let cameraFilterBtn = UIButton()
     private let dateFilterBtn = UIButton()
-    private let addBtn = UIButton()
+    private let saveFiltersBtn = UIButton()
     
     private var pickerWithToolbar: PickerWithToolbar?
     private var datePickerInstance: CustomDatePicker?
@@ -81,10 +81,10 @@ class MainVC: UIViewController, OpenImageDelegate, SendQueryDelegate {
         appTitleNameLabel.text = "MARS.CAMERA"
         appTitleNameLabel.font = UIFont(name: DS.Fonts.SFPro.SFPro_bold, size: DS.FontSizes.largeTitle)
         
-        todaysDateLabel.text = Methods.dateFormatter.string(from: Date())
-        todaysDateLabel.font = UIFont(name: DS.Fonts.SFPro.SFPro_bold, size: DS.FontSizes.body2)
+        dateLabel.text = Methods.dateFormatter.string(from: Date())
+        dateLabel.font = UIFont(name: DS.Fonts.SFPro.SFPro_bold, size: DS.FontSizes.body2)
 
-        let headerTitleSV = UIStackView(arrangedSubviews: [appTitleNameLabel, todaysDateLabel])
+        let headerTitleSV = UIStackView(arrangedSubviews: [appTitleNameLabel, dateLabel])
         headerTitleSV.axis = .vertical
         headerTitleSV.distribution = .fillProportionally
         headerView.addSubview(headerTitleSV)
@@ -105,7 +105,7 @@ class MainVC: UIViewController, OpenImageDelegate, SendQueryDelegate {
         
         let filterDataArray: [(UIButton, UIImage?, String?)] = [(roverFilterBtn, DS.Images.cpuIcon, "Rover"),
                                                                 (cameraFilterBtn, DS.Images.cameraIcon, "Camera"),
-                                                                (addBtn,DS.Images.plusIcon, nil)]
+                                                                (saveFiltersBtn,DS.Images.plusIcon, nil)]
         
         filterDataArray.forEach { filterBtn, img, string in
             filterBtn.layer.cornerRadius = 10
@@ -122,9 +122,10 @@ class MainVC: UIViewController, OpenImageDelegate, SendQueryDelegate {
             $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: btnInsets, bottom: 0, right: 0)
         }
         
-        addBtn.contentHorizontalAlignment = .center
+        saveFiltersBtn.contentHorizontalAlignment = .center
+        saveFiltersBtn.addTarget(self, action: #selector(saveFilters), for: .touchUpInside)
         
-        let filterDataSV = UIStackView(arrangedSubviews: [roverFilterBtn, Methods.spacerView(12), cameraFilterBtn, Methods.spacerView(24), addBtn])
+        let filterDataSV = UIStackView(arrangedSubviews: [roverFilterBtn, Methods.spacerView(12), cameraFilterBtn, Methods.spacerView(24), saveFiltersBtn])
         filterDataSV.spacing = 0
         headerView.addSubview(filterDataSV)
                 
@@ -174,7 +175,7 @@ class MainVC: UIViewController, OpenImageDelegate, SendQueryDelegate {
             }
         }
         
-        addBtn.snp.makeConstraints {
+        saveFiltersBtn.snp.makeConstraints {
             $0.size.equalTo(38)
         }
         
@@ -283,7 +284,7 @@ extension MainVC {
 
 //MARK: - @objc METHODS
 
-extension MainVC: PickerWithToolbarDelegate {
+extension MainVC: PickerWithToolbarDelegate, SendSavedFilterDelegate {
     
     @objc private func imageTapped() {
         let vc = FullScreenImageVC()
@@ -294,6 +295,7 @@ extension MainVC: PickerWithToolbarDelegate {
     
     @objc private func presentHistoryVC() {
         let vc = HistoryVC()
+        vc.sendFilterDelegate = self
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
     }
@@ -344,13 +346,60 @@ extension MainVC: PickerWithToolbarDelegate {
         
         guard let datePickerInstance = datePickerInstance else { return }
         datePickerInstance.addBlur(self)
+        
         _ = datePickerInstance.createDatePicker(self)
         _ = datePickerInstance.createToolBar(title: "Date", self)
         
         datePickerInstance.delegate = self
         
     }
+    
+    @objc private func saveFilters() {
+        let roverName = self.roverFilterBtn.titleLabel?.text
+        let cameraName = self.cameraFilterBtn.titleLabel?.text
+        let date = self.datePickerInstance?.datePicker?.date
+        
+        if roverName != nil, cameraName != nil, date != nil {
+            guard let roverName = self.roverFilterBtn.titleLabel?.text,
+                  let cameraName = self.cameraFilterBtn.titleLabel?.text,
+                  let date = self.datePickerInstance?.datePicker?.date else { return }
+            let saveFilterAlert = UIAlertController(title: "Save Filters",
+                                                    message: "The current filters and the date you have chosen can be saved to the filter history.",
+                                                    preferredStyle: .alert)
+            saveFilterAlert.addAction(UIAlertAction(title: "Save", style: .cancel, handler: { _ in
+                RealmService.addBrowseToRealm(roverName: roverName, cameraName: cameraName, date: date)
 
+            }))
+            saveFilterAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+            present(saveFilterAlert, animated: true)
+        } else {
+            let useFilterAlert = UIAlertController(title: "Ooops",
+                                                    message: "Use all filters to save your search!",
+                                                    preferredStyle: .alert)
+            useFilterAlert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
+            present(useFilterAlert, animated: true)
+        }
+    }
+    
+    //MARK: - SendSavedFilterDelegate Method
+    
+    func sendSavedFilter(roverName: String, cameraName: String, date: Date) {
+        roverFilterBtn.setTitle(roverName, for: .normal)
+        roverQueryDelegate = roverName
+        
+        cameraFilterBtn.setTitle(cameraName, for: .normal)
+        cameraQueryDelegate = cameraName
+        
+        dateLabel.text = Methods.dateFormatter.string(from: date)
+        
+        dateQueryDelegate = date.description
+
+        MarsAPIService.shared.queryDelegate = self
+        fetch()
+    }
+
+    //MARK: - PickerWithToolbarDelegate Methods
+    
     func onCloseButtonTapped() { // PickerWithToolbarDelegate method
         roverFilterBtn.isUserInteractionEnabled = true
         cameraFilterBtn.isUserInteractionEnabled = true
@@ -376,7 +425,7 @@ extension MainVC: PickerWithToolbarDelegate {
         }
         
         if dateFilterBtn.isSelected {
-            todaysDateLabel.text = Methods.dateFormatter.string(from: datePickerInstance?.datePicker?.date ?? Date() )
+            dateLabel.text = Methods.dateFormatter.string(from: datePickerInstance?.datePicker?.date ?? Date() )
             dateQueryDelegate = datePickerInstance?.datePicker?.date.description
             MarsAPIService.shared.queryDelegate = self
             dateFilterBtn.isSelected = false

@@ -11,6 +11,8 @@ class HistoryCardTVC: UITableViewCell {
 
     static let reuseIdentifier = "HistoryCardTVC"
     
+    var realmData: RealmHistoryService?
+    
     private let roverLabel = UILabel()
     private let cameraLabel = UILabel()
     private let dateLabel = UILabel()
@@ -93,9 +95,10 @@ class HistoryCardTVC: UITableViewCell {
     }
     
     func configure() {
-        roverLabel.attributedText = Methods.cardAttrributedText(key: "Rover", value: "roverName")
-        cameraLabel.attributedText = Methods.cardAttrributedText(key: "Camera", value: "cameraName")
-        dateLabel.attributedText =  Methods.cardAttrributedText(key: "Date", value: Methods.reformatingStringDate("dateTitle"))
+        guard let realmData = realmData else { return }
+        roverLabel.attributedText = Methods.cardAttrributedText(key: "Rover", value: realmData.roverName)
+        cameraLabel.attributedText = Methods.cardAttrributedText(key: "Camera", value: realmData.cameraName)
+        dateLabel.attributedText =  Methods.cardAttrributedText(key: "Date", value: Methods.dateFormatter.string(from: realmData.date))
     }
     
 }

@@ -6,15 +6,29 @@
 //
 
 import UIKit
+import RealmSwift
+
+protocol SendSavedFilterDelegate: UIViewController {  // Sendind data back from HistoryVC to MainVC
+    func sendSavedFilter(roverName: String, cameraName: String, date: Date)
+}
 
 class HistoryVC: UIViewController {
 
+    private var realmDataArray: Results<RealmHistoryService>?
+    
+    weak var sendFilterDelegate: SendSavedFilterDelegate?
+    
+    private var emptyHistorySV = UIStackView()
+    private var historyTV = UITableView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLayout()
     }
 
     private func setupLayout() {
+        realmDataArray = RealmService.realm?.objects(RealmHistoryService.self)
+        
         view.backgroundColor = DS.Colors.backgroundOne
         
         let headerView = UIView()  //Orange header view
@@ -44,12 +58,12 @@ class HistoryVC: UIViewController {
         emptyHistoryLabel.textColor = .gray
         emptyHistoryLabel.textAlignment = .center
         
-        let emptyHistorySV = UIStackView(arrangedSubviews: [emptyHistoryImageView, emptyHistoryLabel])
+        emptyHistorySV = UIStackView(arrangedSubviews: [emptyHistoryImageView, emptyHistoryLabel])
         emptyHistorySV.axis = .vertical
         emptyHistorySV.spacing = CGFloat(DS.Paddings.padding)
         view.addSubview(emptyHistorySV)
         
-        let historyTV = UITableView()
+        historyTV = UITableView()
         historyTV.dataSource = self
         historyTV.delegate = self
         historyTV.register(HistoryCardTVC.self, forCellReuseIdentifier: HistoryCardTVC.reuseIdentifier)
@@ -91,7 +105,14 @@ class HistoryVC: UIViewController {
 
 extension HistoryVC: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        if realmDataArray?.count == 0 {
+            historyTV.isHidden = true
+            emptyHistorySV.isHidden = false
+        } else {
+            historyTV.isHidden = false
+            emptyHistorySV.isHidden = true
+        }
+        return realmDataArray?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -100,7 +121,7 @@ extension HistoryVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: HistoryCardTVC.reuseIdentifier, for: indexPath) as? HistoryCardTVC else { return UITableViewCell() }
-        
+        cell.realmData = realmDataArray?[indexPath.section]
         cell.configure()
         return cell
     }
@@ -115,6 +136,15 @@ extension HistoryVC: UITableViewDataSource, UITableViewDelegate {
         return footerView
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        guard let roverName = realmDataArray?[indexPath.section].roverName,
+              let cameraName = realmDataArray?[indexPath.section].cameraName,
+              let date = realmDataArray?[indexPath.section].date else { return }
+        
+        sendFilterDelegate?.sendSavedFilter(roverName: roverName, cameraName: cameraName, date: date)
+        dismiss(animated: true)
+    }
     
 }
 
