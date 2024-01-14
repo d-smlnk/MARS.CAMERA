@@ -20,32 +20,44 @@ import UIKit
 import SnapKit
 import Lottie
 
-protocol OpenImageDelegate: UIViewController {
+protocol OpenImageDelegate: UIViewController { // sending particular image link from MainVC to FullScreenImageVC
     var delegatedImageURL: URL? { get set }
 }
 
-protocol PickerWithToolbarDelegate: AnyObject {
+protocol PickerWithToolbarDelegate: AnyObject { // extension of close and done button's methods for picker view
     func onCloseButtonTapped()
+    func onDoneButtonTapped(_ title: String?)
 }
 
-class MainVC: UIViewController, OpenImageDelegate {
-    
+protocol SendQueryDelegate: AnyObject { // sending queries from roverFilterBtn, cameraFilterBtn and dateFilterBtn to MarsAPIService
+    var roverQueryDelegate: String? { get set }
+    var cameraQueryDelegate: String? { get set }
+    var dateQueryDelegate: String? { get set }
+}
+
+class MainVC: UIViewController, OpenImageDelegate, SendQueryDelegate {
+
     var delegatedImageURL: URL? // OpenImageDelegate variable
     
+    var roverQueryDelegate: String?     // SendQueryDelegate variable
+    var cameraQueryDelegate: String?    // SendQueryDelegate variable
+    var dateQueryDelegate: String?      // SendQueryDelegate variable
+        
     private var animationView: LottieAnimationView?
     
     private var roverData: MarsRoverResponseModel?
     
+    private let todaysDateLabel = UILabel()
+    
     private let photoTableView = UITableView()
     private let roverFilterBtn = UIButton()
     private let cameraFilterBtn = UIButton()
+    private let dateFilterBtn = UIButton()
     private let addBtn = UIButton()
     
-    private let roverNameDataArray = ["Curiosity", "Opportunity", "Spirit"]
-    private let cameraNameDataArray = ["Front Hazard Avoidance Camera", "Rear Hazard Avoidance Camera", "Mast Camera", "Chemistry and Camera Complex", "Mars Hand Lens Imager",
-    "Mars Descent Imager"," Navigation Camera", "Panoramic Camera", "Miniature Thermal Emission Spectrometer (Mini-TES)"]
-    
     private var pickerWithToolbar: PickerWithToolbar?
+    private var datePickerInstance: CustomDatePicker?
+
     
     private var roverPicker = UIPickerView()
     private var cameraPicker = UIPickerView()
@@ -69,7 +81,6 @@ class MainVC: UIViewController, OpenImageDelegate {
         appTitleNameLabel.text = "MARS.CAMERA"
         appTitleNameLabel.font = UIFont(name: DS.Fonts.SFPro.SFPro_bold, size: DS.FontSizes.largeTitle)
         
-        let todaysDateLabel = UILabel()
         todaysDateLabel.text = Methods.dateFormatter.string(from: Date())
         todaysDateLabel.font = UIFont(name: DS.Fonts.SFPro.SFPro_bold, size: DS.FontSizes.body2)
 
@@ -80,21 +91,20 @@ class MainVC: UIViewController, OpenImageDelegate {
         
         let btnInsets = DS.SizeOfElements.btnInsets
         
-        let calendarBtn = UIButton()
-        calendarBtn.setImage(DS.Images.calendarIcon, for: .normal)
-        
-        calendarBtn.configuration?.contentInsets = NSDirectionalEdgeInsets(top: btnInsets,
+        dateFilterBtn.setImage(DS.Images.calendarIcon, for: .normal)
+        dateFilterBtn.addTarget(self, action: #selector(openDatePicker), for: .touchUpInside)
+        dateFilterBtn.configuration?.contentInsets = NSDirectionalEdgeInsets(top: btnInsets,
                                                                            leading: btnInsets,
                                                                            bottom: btnInsets,
                                                                            trailing: btnInsets)
-        headerView.addSubview(calendarBtn)
+        headerView.addSubview(dateFilterBtn)
         
         roverFilterBtn.addTarget(self, action: #selector(openRoverPicker), for: .touchUpInside)
         
         cameraFilterBtn.addTarget(self, action: #selector(openCameraPicker), for: .touchUpInside)
         
-        let filterDataArray: [(UIButton, UIImage?, String?)] = [(roverFilterBtn, DS.Images.cpuIcon, "All"),
-                                                                (cameraFilterBtn, DS.Images.cameraIcon, "All"),
+        let filterDataArray: [(UIButton, UIImage?, String?)] = [(roverFilterBtn, DS.Images.cpuIcon, "Rover"),
+                                                                (cameraFilterBtn, DS.Images.cameraIcon, "Camera"),
                                                                 (addBtn,DS.Images.plusIcon, nil)]
         
         filterDataArray.forEach { filterBtn, img, string in
@@ -146,7 +156,7 @@ class MainVC: UIViewController, OpenImageDelegate {
             $0.leading.equalToSuperview().inset(DS.Paddings.padding)
         }
         
-        calendarBtn.snp.makeConstraints {
+        dateFilterBtn.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(DS.Paddings.padding)
             $0.size.equalTo(DS.SizeOfElements.btnSize)
             $0.centerY.equalTo(headerTitleSV.snp.centerY)
@@ -181,6 +191,8 @@ class MainVC: UIViewController, OpenImageDelegate {
         }
     }
     
+    //MARK: - ANIMATION
+    
     private func launchScreen() { // Продолжение и анимация Лаунч Скрина
         view.backgroundColor = .white
         let image = DS.Images.launchScreenSquareIcon
@@ -202,8 +214,6 @@ class MainVC: UIViewController, OpenImageDelegate {
                 squareIV.isHidden = true
                 animationView.isHidden = true
                 self.setupLayout()
-                self.fetch()
-
             }
         }
     
@@ -289,9 +299,12 @@ extension MainVC: PickerWithToolbarDelegate {
     }
     
     @objc private func openRoverPicker() {
+        roverFilterBtn.isSelected = true
         roverFilterBtn.isUserInteractionEnabled = false
         
-        pickerWithToolbar = PickerWithToolbar(pickerElements: roverNameDataArray)
+        let roverNameDataArray = ["Curiosity", "Opportunity", "Spirit"]
+
+        pickerWithToolbar = PickerWithToolbar(pickerElementsArray: roverNameDataArray)
         
         guard let pickerWithToolbar = pickerWithToolbar else { return }
         roverPicker = pickerWithToolbar.createPickerView(self)
@@ -301,19 +314,73 @@ extension MainVC: PickerWithToolbarDelegate {
     }
     
     @objc private func openCameraPicker() {
+        cameraFilterBtn.isSelected = true
         cameraFilterBtn.isUserInteractionEnabled = false
         
-        pickerWithToolbar = PickerWithToolbar(pickerElements: cameraNameDataArray)
+        let cameraNameDataDictionary: [String : String] = [
+            "Front Hazard Avoidance Camera" : "FHAZ",
+            "Rear Hazard Avoidance Camera" : "RHAZ",
+            "Mast Camera" : "MAST",
+            "Chemistry and Camera Complex" : "CHEMCAM",
+            "Mars Hand Lens Imager" : "MAHLI",
+            "Mars Descent Imager" : "MARDI",
+            "Navigation Camera" : "NAVCAM",
+            "Panoramic Camera" : "PANCAM",
+            "Miniature Thermal Emission Spectrometer (Mini-TES)" : "MINITES"]
+                
+        pickerWithToolbar = PickerWithToolbar(pickerElementsDictionary: cameraNameDataDictionary)
                 
         guard let pickerWithToolbar = pickerWithToolbar else { return }
-        roverPicker = pickerWithToolbar.createPickerView(self)
+        cameraPicker = pickerWithToolbar.createPickerView(self)
         toolBar = pickerWithToolbar.createToolBar(title: "Camera", self)
         
         pickerWithToolbar.delegate = self
     }
     
-    @objc func onCloseButtonTapped() {
+    @objc private func openDatePicker() {
+        dateFilterBtn.isSelected = true
+        
+        datePickerInstance = CustomDatePicker()
+        
+        guard let datePickerInstance = datePickerInstance else { return }
+        datePickerInstance.addBlur(self)
+        _ = datePickerInstance.createDatePicker(self)
+        _ = datePickerInstance.createToolBar(title: "Date", self)
+        
+        datePickerInstance.delegate = self
+        
+    }
+
+    func onCloseButtonTapped() { // PickerWithToolbarDelegate method
         roverFilterBtn.isUserInteractionEnabled = true
         cameraFilterBtn.isUserInteractionEnabled = true
+    }
+    
+    func onDoneButtonTapped(_ title: String?) { // PickerWithToolbarDelegate method
+        if roverFilterBtn.isSelected {
+            roverFilterBtn.isUserInteractionEnabled = true
+            roverFilterBtn.setTitle(title, for: .normal)
+            roverQueryDelegate = title
+            MarsAPIService.shared.queryDelegate = self
+            roverFilterBtn.isSelected = false
+            fetch()
+        }
+        
+        if cameraFilterBtn.isSelected {
+            cameraFilterBtn.isUserInteractionEnabled = true
+            cameraFilterBtn.setTitle(title, for: .normal)
+            cameraQueryDelegate = title
+            MarsAPIService.shared.queryDelegate = self
+            cameraFilterBtn.isSelected = false
+            fetch()
+        }
+        
+        if dateFilterBtn.isSelected {
+            todaysDateLabel.text = Methods.dateFormatter.string(from: datePickerInstance?.datePicker?.date ?? Date() )
+            dateQueryDelegate = datePickerInstance?.datePicker?.date.description
+            MarsAPIService.shared.queryDelegate = self
+            dateFilterBtn.isSelected = false
+            fetch()
+        }
     }
 }

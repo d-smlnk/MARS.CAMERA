@@ -9,22 +9,25 @@ import UIKit
 
 class PickerWithToolbar: NSObject {
 
-    var pickerView: UIPickerView?
-    var toolBar: UIToolbar?
+    private var pickerView: UIPickerView?
+    private var toolBar: UIToolbar?
     
     weak var delegate: PickerWithToolbarDelegate?
     
-    let pickerElements: [String]
+    private let pickerElementsArray: [String]?
+    private let pickerElementsDictionary: [String : String]?
     
-    init(pickerElements: [String]) {
-        self.pickerElements = pickerElements
+    init(pickerElementsArray: [String]? = nil, pickerElementsDictionary: [String : String]? = nil) {
+        self.pickerElementsArray = pickerElementsArray
+        self.pickerElementsDictionary = pickerElementsDictionary
         super.init()
     }
 
     func createPickerView(_ vc: UIViewController) -> UIPickerView {
-        let pickerView = UIPickerView.init(frame: CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 300))
+        let pickerView = UIPickerView.init(frame: CGRect.init(x: 0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 300))
         pickerView.delegate = self
         pickerView.dataSource = self
+        pickerView.selectRow(0, inComponent: 0, animated: false)
         pickerView.backgroundColor = DS.Colors.backgroundOne
         pickerView.layer.cornerRadius = pickerView.frame.height / 12
         pickerView.addShadow()
@@ -43,10 +46,10 @@ class PickerWithToolbar: NSObject {
 
         let titleElement = UIBarButtonItem(customView: pickerTitle)
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneBtn = UIBarButtonItem(image: DS.Images.donePickerIcon, style: .done, target: self, action: #selector(onCloseButtonTapped))
+        let doneBtn = UIBarButtonItem(image: DS.Images.donePickerIcon, style: .done, target: self, action: #selector(onDoneButtonTapped))
         let closeBtn = UIBarButtonItem(image: DS.Images.closePickerIcon, style: .done, target: self, action: #selector(onCloseButtonTapped))
 
-        let toolBar = UIToolbar.init(frame: CGRect.init(x: 0.0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 50))
+        let toolBar = UIToolbar.init(frame: CGRect.init(x: 0, y: UIScreen.main.bounds.size.height - 300, width: UIScreen.main.bounds.size.width, height: 50))
         toolBar.barTintColor = DS.Colors.backgroundOne
         toolBar.items = [closeBtn, flexibleSpace, titleElement, flexibleSpace, doneBtn]
         toolBar.items?.first?.tintColor = .black
@@ -67,6 +70,19 @@ class PickerWithToolbar: NSObject {
         toolBar?.removeFromSuperview()
         pickerView?.removeFromSuperview()
     }
+    
+    @objc func onDoneButtonTapped() {
+        guard let row = pickerView?.selectedRow(inComponent: 0) else { return }
+        let sortedDictionary = pickerElementsDictionary?.sorted(by: { $0 < $1 })
+        
+        if pickerElementsArray != nil, let pickerElementsArray = pickerElementsArray {
+            delegate?.onDoneButtonTapped(pickerElementsArray[row])
+        } else if pickerElementsDictionary != nil {
+            delegate?.onDoneButtonTapped(sortedDictionary?[row].value ?? "")
+        }
+        toolBar?.removeFromSuperview()
+        pickerView?.removeFromSuperview()
+    }
 }
 
 //MARK: - UIPickerViewDelegate, UIPickerViewDataSource
@@ -77,11 +93,25 @@ extension PickerWithToolbar: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerElements.count
+        if pickerElementsArray != nil {
+            return pickerElementsArray?.count ?? 0
+        } else if pickerElementsDictionary != nil {
+            return pickerElementsDictionary?.count ?? 0
+        }
+        return Int()
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return pickerElements[row]
+    
+        let sortedDictionary = pickerElementsDictionary?.sorted(by: { $0 < $1 })
+        
+        if pickerElementsArray != nil {
+            return pickerElementsArray?[row] ?? ""
+        } else if pickerElementsDictionary != nil {
+            return sortedDictionary?[row].key
+        }
+        
+        return String()
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {

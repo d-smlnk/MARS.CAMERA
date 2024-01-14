@@ -17,6 +17,7 @@
 		224E4A272B52EC9600F92F26 /* HistoryCardTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A262B52EC9600F92F26 /* HistoryCardTVC.swift */; };
 		224E4A292B5312C400F92F26 /* UIView_SHADOW.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A282B5312C400F92F26 /* UIView_SHADOW.swift */; };
 		224E4A2B2B53165A00F92F26 /* PickerWithToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A2A2B53165A00F92F26 /* PickerWithToolbar.swift */; };
+		224E4A2F2B54204D00F92F26 /* CustomDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A2E2B54204D00F92F26 /* CustomDatePicker.swift */; };
 		227648F42B500DC5001453CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227648F32B500DC5001453CB /* AppDelegate.swift */; };
 		227648F62B500DC5001453CB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227648F52B500DC5001453CB /* SceneDelegate.swift */; };
 		227648F82B500DC5001453CB /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227648F72B500DC5001453CB /* MainVC.swift */; };
@@ -48,6 +49,7 @@
 		224E4A262B52EC9600F92F26 /* HistoryCardTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryCardTVC.swift; sourceTree = "<group>"; };
 		224E4A282B5312C400F92F26 /* UIView_SHADOW.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView_SHADOW.swift; sourceTree = "<group>"; };
 		224E4A2A2B53165A00F92F26 /* PickerWithToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerWithToolbar.swift; sourceTree = "<group>"; };
+		224E4A2E2B54204D00F92F26 /* CustomDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDatePicker.swift; sourceTree = "<group>"; };
 		227648F02B500DC5001453CB /* LeadsDoIt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeadsDoIt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		227648F32B500DC5001453CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		227648F52B500DC5001453CB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -104,7 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				224E4A142B505A1200F92F26 /* Cells */,
-				224E4A2A2B53165A00F92F26 /* PickerWithToolbar.swift */,
+				224E4A302B543B0300F92F26 /* Pickers */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -132,6 +134,15 @@
 				224E4A1E2B516F8400F92F26 /* MarsAPIService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		224E4A302B543B0300F92F26 /* Pickers */ = {
+			isa = PBXGroup;
+			children = (
+				224E4A2A2B53165A00F92F26 /* PickerWithToolbar.swift */,
+				224E4A2E2B54204D00F92F26 /* CustomDatePicker.swift */,
+			);
+			path = Pickers;
 			sourceTree = "<group>";
 		};
 		227648E72B500DC5001453CB = {
@@ -316,6 +327,7 @@
 				22AB22832B5017200046C991 /* DesignSystem.swift in Sources */,
 				224E4A2B2B53165A00F92F26 /* PickerWithToolbar.swift in Sources */,
 				224E4A192B51696700F92F26 /* QueryModel.swift in Sources */,
+				224E4A2F2B54204D00F92F26 /* CustomDatePicker.swift in Sources */,
 				224E4A272B52EC9600F92F26 /* HistoryCardTVC.swift in Sources */,
 				227648F82B500DC5001453CB /* MainVC.swift in Sources */,
 				227648F42B500DC5001453CB /* AppDelegate.swift in Sources */,

@@ -17,8 +17,8 @@ final class MarsAPIService {
         var url: URL {
             switch self {
             case .nasa:
-                return URL(string: "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?earth_date=2015-06-30&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd") ?? URL(fileURLWithPath: "")
-            }
+                return URL(string: "https://api.nasa.gov/mars-photos/api/v1/rovers/") ?? URL(fileURLWithPath: "")
+            } //  (curiosity - roverName)/photos?earth_date=(Date - 2015-6-3)&camera=(cameraName fhaz)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd
         }
     }
     
@@ -32,11 +32,19 @@ final class MarsAPIService {
     
     static let shared = MarsAPIService()
     
-//    weak var queryDelegate: SendQueryDelegate?
+    weak var queryDelegate: SendQueryDelegate?
     
     func fetchRoverData(completion: @escaping(Result<MarsRoverResponseModel, Error>) -> Void) {
         print("start fetching")
-        AF.request(Link.nasa.url)
+        
+        guard let roverNameQuery = queryDelegate?.roverQueryDelegate?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
+        guard let cameraNameQuery = queryDelegate?.cameraQueryDelegate?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
+        guard let dateQuery = queryDelegate?.dateQueryDelegate?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
+        
+        
+        let fullURL = "\(Link.nasa.url)\(roverNameQuery)/photos?earth_date=\(dateQuery)&camera=\(cameraNameQuery)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                print(fullURL)
+        AF.request(fullURL)
             .validate()
             .responseDecodable(of: MarsRoverResponseModel.self) { response in
                 print("Status code: \(String(describing: response.response?.statusCode))")
