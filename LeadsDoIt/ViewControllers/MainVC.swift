@@ -24,6 +24,10 @@ protocol OpenImageDelegate: UIViewController {
     var delegatedImageURL: URL? { get set }
 }
 
+protocol PickerWithToolbarDelegate: AnyObject {
+    func onCloseButtonTapped()
+}
+
 class MainVC: UIViewController, OpenImageDelegate {
     
     var delegatedImageURL: URL? // OpenImageDelegate variable
@@ -33,6 +37,19 @@ class MainVC: UIViewController, OpenImageDelegate {
     private var roverData: MarsRoverResponseModel?
     
     private let photoTableView = UITableView()
+    private let roverFilterBtn = UIButton()
+    private let cameraFilterBtn = UIButton()
+    private let addBtn = UIButton()
+    
+    private let roverNameDataArray = ["Curiosity", "Opportunity", "Spirit"]
+    private let cameraNameDataArray = ["Front Hazard Avoidance Camera", "Rear Hazard Avoidance Camera", "Mast Camera", "Chemistry and Camera Complex", "Mars Hand Lens Imager",
+    "Mars Descent Imager"," Navigation Camera", "Panoramic Camera", "Miniature Thermal Emission Spectrometer (Mini-TES)"]
+    
+    private var pickerWithToolbar: PickerWithToolbar?
+    
+    private var roverPicker = UIPickerView()
+    private var cameraPicker = UIPickerView()
+    private var toolBar = UIToolbar()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,15 +82,16 @@ class MainVC: UIViewController, OpenImageDelegate {
         
         let calendarBtn = UIButton()
         calendarBtn.setImage(DS.Images.calendarIcon, for: .normal)
-        calendarBtn.contentEdgeInsets = UIEdgeInsets(top: btnInsets,
-                                                     left: btnInsets,
-                                                     bottom: btnInsets,
-                                                     right: btnInsets)
+        
+        calendarBtn.configuration?.contentInsets = NSDirectionalEdgeInsets(top: btnInsets,
+                                                                           leading: btnInsets,
+                                                                           bottom: btnInsets,
+                                                                           trailing: btnInsets)
         headerView.addSubview(calendarBtn)
         
-        let roverFilterBtn = UIButton()
-        let cameraFilterBtn = UIButton()
-        let addBtn = UIButton()
+        roverFilterBtn.addTarget(self, action: #selector(openRoverPicker), for: .touchUpInside)
+        
+        cameraFilterBtn.addTarget(self, action: #selector(openCameraPicker), for: .touchUpInside)
         
         let filterDataArray: [(UIButton, UIImage?, String?)] = [(roverFilterBtn, DS.Images.cpuIcon, "All"),
                                                                 (cameraFilterBtn, DS.Images.cameraIcon, "All"),
@@ -106,6 +124,15 @@ class MainVC: UIViewController, OpenImageDelegate {
         photoTableView.showsVerticalScrollIndicator = false
         photoTableView.separatorStyle = .none
         view.addSubview(photoTableView)
+        
+        let historyBtn = UIButton()
+        let historyBtnSize: CGFloat = 70
+        historyBtn.setImage(DS.Images.historyIcon, for: .normal)
+        historyBtn.backgroundColor = DS.Colors.accentOne
+        historyBtn.layer.cornerRadius = historyBtnSize / 2
+        historyBtn.configuration?.contentInsets = NSDirectionalEdgeInsets(top: btnInsets, leading: btnInsets, bottom: btnInsets, trailing: btnInsets)
+        historyBtn.addTarget(self, action: #selector(presentHistoryVC), for: .touchUpInside)
+        view.addSubview(historyBtn)
             
         //MARK: - CONSTRAINTS OF MAIN LAYOUT
         
@@ -145,6 +172,12 @@ class MainVC: UIViewController, OpenImageDelegate {
             $0.top.equalTo(headerView.snp.bottom).offset(DS.Paddings.padding)
             $0.horizontalEdges.equalToSuperview().inset(DS.Paddings.padding)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(DS.Paddings.padding)
+        }
+        
+        historyBtn.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(DS.Paddings.padding)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(DS.Paddings.padding)
+            $0.size.equalTo(historyBtnSize)
         }
     }
     
@@ -240,11 +273,47 @@ extension MainVC {
 
 //MARK: - @objc METHODS
 
-extension MainVC {
-    @objc func imageTapped() {
+extension MainVC: PickerWithToolbarDelegate {
+    
+    @objc private func imageTapped() {
         let vc = FullScreenImageVC()
         vc.imageDelegate = self
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
+    }
+    
+    @objc private func presentHistoryVC() {
+        let vc = HistoryVC()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
+    }
+    
+    @objc private func openRoverPicker() {
+        roverFilterBtn.isUserInteractionEnabled = false
+        
+        pickerWithToolbar = PickerWithToolbar(pickerElements: roverNameDataArray)
+        
+        guard let pickerWithToolbar = pickerWithToolbar else { return }
+        roverPicker = pickerWithToolbar.createPickerView(self)
+        toolBar = pickerWithToolbar.createToolBar(title: "Rover", self)
+        
+        pickerWithToolbar.delegate = self
+    }
+    
+    @objc private func openCameraPicker() {
+        cameraFilterBtn.isUserInteractionEnabled = false
+        
+        pickerWithToolbar = PickerWithToolbar(pickerElements: cameraNameDataArray)
+                
+        guard let pickerWithToolbar = pickerWithToolbar else { return }
+        roverPicker = pickerWithToolbar.createPickerView(self)
+        toolBar = pickerWithToolbar.createToolBar(title: "Camera", self)
+        
+        pickerWithToolbar.delegate = self
+    }
+    
+    @objc func onCloseButtonTapped() {
+        roverFilterBtn.isUserInteractionEnabled = true
+        cameraFilterBtn.isUserInteractionEnabled = true
     }
 }

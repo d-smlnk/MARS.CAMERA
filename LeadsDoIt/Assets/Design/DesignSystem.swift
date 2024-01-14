@@ -54,5 +54,10 @@ struct DS {
         static let cameraIcon = UIImage(named: "camera")
         static let plusIcon = UIImage(named: "plus")
         static let closeIcon = UIImage(named: "close")
+        static let historyIcon = UIImage(named: "history")
+        static let ballIcon = UIImage(named: "ball")
+        static let backIcon = UIImage(named: "back")
+        static let closePickerIcon = UIImage(named: "closePicker")
+        static let donePickerIcon = UIImage(named: "donePicker")
     }
 }

@@ -13,6 +13,10 @@
 		224E4A1C2B516EF300F92F26 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 224E4A1B2B516EF300F92F26 /* Alamofire */; };
 		224E4A1F2B516F8400F92F26 /* MarsAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A1E2B516F8400F92F26 /* MarsAPIService.swift */; };
 		224E4A232B519B3100F92F26 /* FullScreenImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A222B519B3100F92F26 /* FullScreenImageVC.swift */; };
+		224E4A252B52E6A000F92F26 /* HistoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A242B52E6A000F92F26 /* HistoryVC.swift */; };
+		224E4A272B52EC9600F92F26 /* HistoryCardTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A262B52EC9600F92F26 /* HistoryCardTVC.swift */; };
+		224E4A292B5312C400F92F26 /* UIView_SHADOW.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A282B5312C400F92F26 /* UIView_SHADOW.swift */; };
+		224E4A2B2B53165A00F92F26 /* PickerWithToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A2A2B53165A00F92F26 /* PickerWithToolbar.swift */; };
 		227648F42B500DC5001453CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227648F32B500DC5001453CB /* AppDelegate.swift */; };
 		227648F62B500DC5001453CB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227648F52B500DC5001453CB /* SceneDelegate.swift */; };
 		227648F82B500DC5001453CB /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227648F72B500DC5001453CB /* MainVC.swift */; };
@@ -40,6 +44,10 @@
 		224E4A182B51696700F92F26 /* QueryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryModel.swift; sourceTree = "<group>"; };
 		224E4A1E2B516F8400F92F26 /* MarsAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarsAPIService.swift; sourceTree = "<group>"; };
 		224E4A222B519B3100F92F26 /* FullScreenImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenImageVC.swift; sourceTree = "<group>"; };
+		224E4A242B52E6A000F92F26 /* HistoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryVC.swift; sourceTree = "<group>"; };
+		224E4A262B52EC9600F92F26 /* HistoryCardTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryCardTVC.swift; sourceTree = "<group>"; };
+		224E4A282B5312C400F92F26 /* UIView_SHADOW.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView_SHADOW.swift; sourceTree = "<group>"; };
+		224E4A2A2B53165A00F92F26 /* PickerWithToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerWithToolbar.swift; sourceTree = "<group>"; };
 		227648F02B500DC5001453CB /* LeadsDoIt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeadsDoIt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		227648F32B500DC5001453CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		227648F52B500DC5001453CB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				224E4A142B505A1200F92F26 /* Cells */,
+				224E4A2A2B53165A00F92F26 /* PickerWithToolbar.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -104,6 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				224E4A152B505A3700F92F26 /* CardTVC.swift */,
+				224E4A262B52EC9600F92F26 /* HistoryCardTVC.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -172,6 +182,7 @@
 			children = (
 				227648F72B500DC5001453CB /* MainVC.swift */,
 				224E4A222B519B3100F92F26 /* FullScreenImageVC.swift */,
+				224E4A242B52E6A000F92F26 /* HistoryVC.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -180,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				22AB22862B5017AC0046C991 /* UIColor_HEX.swift */,
+				224E4A282B5312C400F92F26 /* UIView_SHADOW.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -302,13 +314,17 @@
 				22AB22872B5017AC0046C991 /* UIColor_HEX.swift in Sources */,
 				224E4A232B519B3100F92F26 /* FullScreenImageVC.swift in Sources */,
 				22AB22832B5017200046C991 /* DesignSystem.swift in Sources */,
+				224E4A2B2B53165A00F92F26 /* PickerWithToolbar.swift in Sources */,
 				224E4A192B51696700F92F26 /* QueryModel.swift in Sources */,
+				224E4A272B52EC9600F92F26 /* HistoryCardTVC.swift in Sources */,
 				227648F82B500DC5001453CB /* MainVC.swift in Sources */,
 				227648F42B500DC5001453CB /* AppDelegate.swift in Sources */,
 				224E4A112B50579E00F92F26 /* Methods.swift in Sources */,
 				224E4A1F2B516F8400F92F26 /* MarsAPIService.swift in Sources */,
+				224E4A252B52E6A000F92F26 /* HistoryVC.swift in Sources */,
 				224E4A162B505A3700F92F26 /* CardTVC.swift in Sources */,
 				227648F62B500DC5001453CB /* SceneDelegate.swift in Sources */,
+				224E4A292B5312C400F92F26 /* UIView_SHADOW.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

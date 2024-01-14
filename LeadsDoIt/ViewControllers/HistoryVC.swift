@@ -1,0 +1,127 @@
+//
+//  HistoryVC.swift
+//  LeadsDoIt
+//
+//  Created by Дима Самойленко on 13.01.2024.
+//
+
+import UIKit
+
+class HistoryVC: UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupLayout()
+    }
+
+    private func setupLayout() {
+        view.backgroundColor = DS.Colors.backgroundOne
+        
+        let headerView = UIView()  //Orange header view
+        headerView.backgroundColor = DS.Colors.accentOne
+        headerView.layer.shadowOpacity = 1
+        headerView.layer.shadowRadius = 5
+        view.addSubview(headerView)
+        
+        let backBtn = UIButton()
+        backBtn.setImage(DS.Images.backIcon, for: .normal)
+        backBtn.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6)
+        backBtn.addTarget(self, action: #selector(back), for: .touchUpInside)
+        headerView.addSubview(backBtn)
+        
+        let historyTitleLabel = UILabel()
+        historyTitleLabel.text = " History"
+        historyTitleLabel.font = UIFont(name: DS.Fonts.SFPro.SFPro_bold, size: DS.FontSizes.largeTitle)
+        headerView.addSubview(historyTitleLabel)
+
+        let emptyHistoryImageView = UIImageView()
+        emptyHistoryImageView.image = DS.Images.ballIcon
+        emptyHistoryImageView.contentMode = .scaleAspectFit
+        
+        let emptyHistoryLabel = UILabel()
+        emptyHistoryLabel.text = "Browsing history is empty."
+        emptyHistoryLabel.font = UIFont(name: DS.Fonts.SFPro.SFPro_regular, size: DS.FontSizes.body)
+        emptyHistoryLabel.textColor = .gray
+        emptyHistoryLabel.textAlignment = .center
+        
+        let emptyHistorySV = UIStackView(arrangedSubviews: [emptyHistoryImageView, emptyHistoryLabel])
+        emptyHistorySV.axis = .vertical
+        emptyHistorySV.spacing = CGFloat(DS.Paddings.padding)
+        view.addSubview(emptyHistorySV)
+        
+        let historyTV = UITableView()
+        historyTV.dataSource = self
+        historyTV.delegate = self
+        historyTV.register(HistoryCardTVC.self, forCellReuseIdentifier: HistoryCardTVC.reuseIdentifier)
+        historyTV.separatorStyle = .none
+        view.addSubview(historyTV)
+        
+        //MARK: - CONSTRAINTS
+        
+        headerView.snp.makeConstraints {
+            $0.top.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(view.frame.height / 6.45)
+        }
+        
+        backBtn.snp.makeConstraints {
+            $0.top.leading.equalTo(view.safeAreaLayoutGuide).inset(DS.Paddings.padding)
+        }
+        
+        historyTitleLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.centerY.equalTo(backBtn)
+        }
+        
+        emptyHistorySV.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.height.equalTo(emptyHistorySV.snp.width)
+        }
+        
+        historyTV.snp.makeConstraints {
+            $0.top.equalTo(headerView.snp.bottom).offset(DS.Paddings.padding)
+            $0.horizontalEdges.equalToSuperview().inset(DS.Paddings.padding)
+            $0.bottom.equalToSuperview()
+        }
+        
+    }
+
+}
+
+//MARK: - TABLEVIEW DATA SOURCE & DELEGATE
+
+extension HistoryVC: UITableViewDataSource, UITableViewDelegate {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 4
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: HistoryCardTVC.reuseIdentifier, for: indexPath) as? HistoryCardTVC else { return UITableViewCell() }
+        
+        cell.configure()
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 12
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView()
+        footerView.backgroundColor = .clear
+        return footerView
+    }
+    
+    
+}
+
+// MARK: - @objc METHODS
+
+extension HistoryVC {
+    @objc func back() {
+        dismiss(animated: true)
+    }
+}
