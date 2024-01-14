@@ -18,7 +18,7 @@ final class MarsAPIService {
             switch self {
             case .nasa:
                 return URL(string: "https://api.nasa.gov/mars-photos/api/v1/rovers/") ?? URL(fileURLWithPath: "")
-            } //  (curiosity - roverName)/photos?earth_date=(Date - 2015-6-3)&camera=(cameraName fhaz)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd
+            }
         }
     }
     
@@ -43,7 +43,7 @@ final class MarsAPIService {
         
         
         let fullURL = "\(Link.nasa.url)\(roverNameQuery)/photos?earth_date=\(dateQuery)&camera=\(cameraNameQuery)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
-                print(fullURL)
+
         AF.request(fullURL)
             .validate()
             .responseDecodable(of: MarsRoverResponseModel.self) { response in
@@ -60,6 +60,7 @@ final class MarsAPIService {
                 }
             }
     }
+        
     
     func getImageFromUrl(_ imageURL: URL, completion: @escaping (UIImage?) -> Void) {
         AF.request(imageURL).response { response in

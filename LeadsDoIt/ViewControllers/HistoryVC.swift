@@ -138,12 +138,33 @@ extension HistoryVC: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        guard let roverName = realmDataArray?[indexPath.section].roverName,
-              let cameraName = realmDataArray?[indexPath.section].cameraName,
-              let date = realmDataArray?[indexPath.section].date else { return }
+        let alertController = UIAlertController(title: "Menu Filter", message: nil, preferredStyle: .actionSheet)
         
-        sendFilterDelegate?.sendSavedFilter(roverName: roverName, cameraName: cameraName, date: date)
-        dismiss(animated: true)
+        alertController.addAction(UIAlertAction(title: "Use", style: .default, handler: { [weak self] _ in
+            guard let self = self else { return }
+            guard let roverName = realmDataArray?[indexPath.section].roverName,
+                  let cameraName = realmDataArray?[indexPath.section].cameraName,
+                  let date = realmDataArray?[indexPath.section].date else { return }
+            
+            sendFilterDelegate?.sendSavedFilter(roverName: roverName, cameraName: cameraName, date: date)
+            dismiss(animated: true)
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { [weak self] _ in
+            guard let self = self else { return }
+            
+            guard let objectToDelete = realmDataArray?[indexPath.section] else { return }
+
+            do {
+                try? RealmService.realm?.write {
+                    RealmService.realm?.delete(objectToDelete)
+                }
+            }
+
+            tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
+        }))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alertController, animated: true)
     }
     
 }
