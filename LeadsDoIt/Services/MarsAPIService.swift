@@ -37,12 +37,59 @@ final class MarsAPIService {
     func fetchRoverData(completion: @escaping(Result<MarsRoverResponseModel, Error>) -> Void) {
         print("start fetching")
         
-        guard let roverNameQuery = queryDelegate?.roverQueryDelegate?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
-        guard let cameraNameQuery = queryDelegate?.cameraQueryDelegate?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
-        guard let dateQuery = queryDelegate?.dateQueryDelegate?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
+        let roverNameQuery = queryDelegate?.roverQueryDelegate?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let cameraNameQuery = queryDelegate?.cameraQueryDelegate?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let dateQuery = queryDelegate?.dateQueryDelegate?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         
+        var fullURL = String()
         
-        let fullURL = "\(Link.nasa.url)\(roverNameQuery)/photos?earth_date=\(dateQuery)&camera=\(cameraNameQuery)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+        switch (roverNameQuery, cameraNameQuery, dateQuery) {
+        case (nil, nil, nil):
+            fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+        case (nil, nil, let date?):
+            fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+        case (nil, let cameraName?, nil):
+            if cameraName == "All" {
+                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            } else {
+                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&camera=\(cameraName)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            }
+        case (let roverName?, nil, nil):
+            if roverName == "All" {
+                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            } else {
+                fullURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(Date())&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            }
+        case (let roverName?, let cameraName?, nil):
+            if roverName == "All", cameraName == "All" {
+                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            } else {
+                fullURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(Date())&camera=\(cameraName)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            }
+        case (let roverName?, nil, let date?):
+            if roverName == "All" {
+                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            } else {
+                fullURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            }
+        case (nil, let cameraName?, let date?):
+            print("nil, let cameraName?, let date?")
+            if cameraName == "All" {
+                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            } else {
+                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&camera=\(cameraName)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            }
+        case (let roverName?, let cameraName?, let date?):
+            if roverName != "All" && cameraName != "All" {
+                fullURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(date)&camera=\(cameraName)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            } else if roverName == "All", cameraName == "All" {
+                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            } else if cameraName == "All" {
+                fullURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            } else if roverName == "All" {
+                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&camera=\(cameraName)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            }
+        }
 
         AF.request(fullURL)
             .validate()

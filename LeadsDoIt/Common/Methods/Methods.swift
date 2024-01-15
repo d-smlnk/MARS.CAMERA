@@ -50,7 +50,12 @@ struct Methods {
         let outputFormatter = DateFormatter()
         outputFormatter.dateFormat = "dd MMMM, yyyy"
         
-        let outputDateString = outputFormatter.string(from: date)
+        var components = DateComponents()
+            components.day = 1
+
+        guard let newDate = Calendar.current.date(byAdding: components, to: date) else { return ""}
+        
+        let outputDateString = outputFormatter.string(from: newDate)
         return outputDateString
     }
     

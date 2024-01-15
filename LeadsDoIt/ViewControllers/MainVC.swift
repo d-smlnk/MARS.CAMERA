@@ -103,8 +103,8 @@ class MainVC: UIViewController, OpenImageDelegate, SendQueryDelegate {
         
         cameraFilterBtn.addTarget(self, action: #selector(openCameraPicker), for: .touchUpInside)
         
-        let filterDataArray: [(UIButton, UIImage?, String?)] = [(roverFilterBtn, DS.Images.cpuIcon, "Rover"),
-                                                                (cameraFilterBtn, DS.Images.cameraIcon, "Camera"),
+        let filterDataArray: [(UIButton, UIImage?, String?)] = [(roverFilterBtn, DS.Images.cpuIcon, "All"),
+                                                                (cameraFilterBtn, DS.Images.cameraIcon, "All"),
                                                                 (saveFiltersBtn,DS.Images.plusIcon, nil)]
         
         filterDataArray.forEach { filterBtn, img, string in
@@ -215,6 +215,7 @@ class MainVC: UIViewController, OpenImageDelegate, SendQueryDelegate {
                 squareIV.isHidden = true
                 animationView.isHidden = true
                 self.setupLayout()
+                self.fetch()
             }
         }
     
@@ -304,7 +305,7 @@ extension MainVC: PickerWithToolbarDelegate, SendSavedFilterDelegate {
         roverFilterBtn.isSelected = true
         roverFilterBtn.isUserInteractionEnabled = false
         
-        let roverNameDataArray = ["Curiosity", "Opportunity", "Spirit"]
+        let roverNameDataArray = ["All", "Curiosity", "Opportunity", "Spirit"]
 
         pickerWithToolbar = PickerWithToolbar(pickerElementsArray: roverNameDataArray)
         
@@ -320,6 +321,7 @@ extension MainVC: PickerWithToolbarDelegate, SendSavedFilterDelegate {
         cameraFilterBtn.isUserInteractionEnabled = false
         
         let cameraNameDataDictionary: [String : String] = [
+            "All" : "All",
             "Front Hazard Avoidance Camera" : "FHAZ",
             "Rear Hazard Avoidance Camera" : "RHAZ",
             "Mast Camera" : "MAST",
