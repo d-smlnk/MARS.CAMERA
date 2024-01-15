@@ -8,6 +8,7 @@
 import Foundation
 import Alamofire
 import UIKit
+import SDWebImage
 
 final class MarsAPIService {
     
@@ -107,22 +108,37 @@ final class MarsAPIService {
                 }
             }
     }
-        
-    
+
     func getImageFromUrl(_ imageURL: URL, completion: @escaping (UIImage?) -> Void) {
-        AF.request(imageURL).response { response in
-            switch response.result {
-            case .success(_):
-                guard let imageData = response.data else {
-                    completion(nil)
-                    return
+        SDWebImageManager.shared.loadImage(
+            with: imageURL,
+            options: [.progressiveLoad, .continueInBackground],
+            progress: nil,
+            completed: { (image, _, _, cacheType, _, _) in
+                if let image = image {
+                    completion(image)
+                } else {
+                    AF.request(imageURL).response { response in
+                        switch response.result {
+                        case .success(_):
+                            guard let imageData = response.data else {
+                                completion(nil)
+                                return
+                            }
+                            let downloadedImage = UIImage(data: imageData)
+                            completion(downloadedImage)
+                            
+                            if let downloadedImage = downloadedImage {
+                                SDImageCache.shared.store(downloadedImage, forKey: imageURL.absoluteString, completion: nil)
+                            }
+                            
+                        case .failure(let error):
+                            print("Error loading image: \(error)")
+                            completion(nil)
+                        }
+                    }
                 }
-                let image = UIImage(data: imageData)
-                completion(image)
-            case .failure(let error):
-                print("Error loading image: \(error)")
-                completion(nil)
             }
-        }
+        )
     }
 }
