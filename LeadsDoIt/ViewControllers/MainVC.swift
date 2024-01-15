@@ -361,26 +361,35 @@ extension MainVC: PickerWithToolbarDelegate, SendSavedFilterDelegate {
         let cameraName = self.cameraFilterBtn.titleLabel?.text
         let date = self.datePickerInstance?.datePicker?.date
         
-        if roverName != nil, cameraName != nil, date != nil {
-            guard let roverName = self.roverFilterBtn.titleLabel?.text,
-                  let cameraName = self.cameraFilterBtn.titleLabel?.text,
-                  let date = self.datePickerInstance?.datePicker?.date else { return }
-            let saveFilterAlert = UIAlertController(title: "Save Filters",
-                                                    message: "The current filters and the date you have chosen can be saved to the filter history.",
-                                                    preferredStyle: .alert)
-            saveFilterAlert.addAction(UIAlertAction(title: "Save", style: .cancel, handler: { _ in
+        let saveFilterAlert = UIAlertController(title: "Save Filters",
+                                                message: "The current filters and the date you have chosen can be saved to the filter history.",
+                                                preferredStyle: .alert)
+        
+        saveFilterAlert.addAction(UIAlertAction(title: "Save", style: .cancel, handler: { _ in
+            
+            switch (roverName, cameraName, date) {
+            case (nil, nil, nil):
+                RealmService.addBrowseToRealm(roverName: "All", cameraName: "All", date: Date())
+            case (nil, nil, let date?):
+                RealmService.addBrowseToRealm(roverName: "All", cameraName: "All", date: date)
+            case (nil, let cameraName?, nil):
+                RealmService.addBrowseToRealm(roverName: "All", cameraName: cameraName, date: Date())
+            case (let roverName?, nil, nil):
+                RealmService.addBrowseToRealm(roverName: roverName, cameraName: "All", date: Date())
+            case (let roverName?, let cameraName?, nil):
+                RealmService.addBrowseToRealm(roverName: roverName, cameraName: cameraName, date: Date())
+            case (let roverName?, nil, let date?):
+                RealmService.addBrowseToRealm(roverName: roverName, cameraName: "All", date: date)
+            case (nil, let cameraName?, let date?):
+                RealmService.addBrowseToRealm(roverName: "All", cameraName: cameraName, date: date)
+            case (let roverName?, let cameraName?, let date?):
                 RealmService.addBrowseToRealm(roverName: roverName, cameraName: cameraName, date: date)
-
-            }))
-            saveFilterAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
-            present(saveFilterAlert, animated: true)
-        } else {
-            let useFilterAlert = UIAlertController(title: "Ooops",
-                                                    message: "Use all filters to save your search!",
-                                                    preferredStyle: .alert)
-            useFilterAlert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
-            present(useFilterAlert, animated: true)
-        }
+            }
+            
+        }))
+        
+        saveFilterAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        present(saveFilterAlert, animated: true)
     }
     
     //MARK: - SendSavedFilterDelegate Method
