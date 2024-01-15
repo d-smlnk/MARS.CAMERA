@@ -15,6 +15,13 @@ final class MarsAPIService {
     enum Link {
         case nasa
         
+        var apiKey: String {
+            switch self {
+            case .nasa:
+                return "&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            }
+        }
+        
         var url: URL {
             switch self {
             case .nasa:
@@ -42,57 +49,57 @@ final class MarsAPIService {
         let cameraNameQuery = queryDelegate?.cameraQueryDelegate?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let dateQuery = queryDelegate?.dateQueryDelegate?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         
-        var fullURL = String()
+        var pathURL = String()
         
         switch (roverNameQuery, cameraNameQuery, dateQuery) {
         case (nil, nil, nil):
-            fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            pathURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())"
         case (nil, nil, let date?):
-            fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+            pathURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)"
         case (nil, let cameraName?, nil):
             if cameraName == "All" {
-                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())"
             } else {
-                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&camera=\(cameraName)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&camera=\(cameraName)"
             }
         case (let roverName?, nil, nil):
             if roverName == "All" {
-                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())"
             } else {
-                fullURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(Date())&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(Date())"
             }
         case (let roverName?, let cameraName?, nil):
             if roverName == "All", cameraName == "All" {
-                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())"
             } else {
-                fullURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(Date())&camera=\(cameraName)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(Date())&camera=\(cameraName)"
             }
         case (let roverName?, nil, let date?):
             if roverName == "All" {
-                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)"
             } else {
-                fullURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(date)"
             }
         case (nil, let cameraName?, let date?):
             print("nil, let cameraName?, let date?")
             if cameraName == "All" {
-                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)"
             } else {
-                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&camera=\(cameraName)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&camera=\(cameraName)"
             }
         case (let roverName?, let cameraName?, let date?):
             if roverName != "All" && cameraName != "All" {
-                fullURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(date)&camera=\(cameraName)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(date)&camera=\(cameraName)"
             } else if roverName == "All", cameraName == "All" {
-                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)"
             } else if cameraName == "All" {
-                fullURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(date)"
             } else if roverName == "All" {
-                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&camera=\(cameraName)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                pathURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&camera=\(cameraName)"
             }
         }
 
-        AF.request(fullURL)
+        AF.request(pathURL + Link.nasa.apiKey)
             .validate()
             .responseDecodable(of: MarsRoverResponseModel.self) { response in
                 print("Status code: \(String(describing: response.response?.statusCode))")
