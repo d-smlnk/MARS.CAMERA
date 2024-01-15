@@ -84,7 +84,7 @@ final class MarsAPIService {
             if roverName != "All" && cameraName != "All" {
                 fullURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(date)&camera=\(cameraName)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
             } else if roverName == "All", cameraName == "All" {
-                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(Date())&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
+                fullURL = "\(Link.nasa.url)curiosity/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
             } else if cameraName == "All" {
                 fullURL = "\(Link.nasa.url)\(roverName)/photos?earth_date=\(date)&api_key=6nPtiIfSFRBDNEL7z3wcXML171RLegjYZeIATasd"
             } else if roverName == "All" {

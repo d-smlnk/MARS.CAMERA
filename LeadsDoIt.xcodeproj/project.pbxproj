@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		224E4A112B50579E00F92F26 /* Methods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A102B50579E00F92F26 /* Methods.swift */; };
 		224E4A162B505A3700F92F26 /* CardTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A152B505A3700F92F26 /* CardTVC.swift */; };
-		224E4A192B51696700F92F26 /* QueryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A182B51696700F92F26 /* QueryModel.swift */; };
 		224E4A1C2B516EF300F92F26 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 224E4A1B2B516EF300F92F26 /* Alamofire */; };
 		224E4A1F2B516F8400F92F26 /* MarsAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A1E2B516F8400F92F26 /* MarsAPIService.swift */; };
 		224E4A232B519B3100F92F26 /* FullScreenImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224E4A222B519B3100F92F26 /* FullScreenImageVC.swift */; };
@@ -43,12 +42,15 @@
 		22AB229D2B5027890046C991 /* SFPRODISPLAYULTRALIGHTITALIC.OTF in Resources */ = {isa = PBXBuildFile; fileRef = 22AB22912B501D030046C991 /* SFPRODISPLAYULTRALIGHTITALIC.OTF */; };
 		22ACD4952B553D3D0046DF8A /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 22ACD4942B553D3D0046DF8A /* SDWebImage */; };
 		22ACD4972B553D3D0046DF8A /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 22ACD4962B553D3D0046DF8A /* SDWebImageMapKit */; };
+		22ACD4992B5543710046DF8A /* RoverModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22ACD4982B5543710046DF8A /* RoverModel.swift */; };
+		22ACD49B2B5543800046DF8A /* CameraModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22ACD49A2B5543800046DF8A /* CameraModel.swift */; };
+		22ACD49D2B5543990046DF8A /* PhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22ACD49C2B5543990046DF8A /* PhotoModel.swift */; };
+		22ACD49F2B5543AA0046DF8A /* MarsRoverResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22ACD49E2B5543AA0046DF8A /* MarsRoverResponseModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		224E4A102B50579E00F92F26 /* Methods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Methods.swift; sourceTree = "<group>"; };
 		224E4A152B505A3700F92F26 /* CardTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTVC.swift; sourceTree = "<group>"; };
-		224E4A182B51696700F92F26 /* QueryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryModel.swift; sourceTree = "<group>"; };
 		224E4A1E2B516F8400F92F26 /* MarsAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarsAPIService.swift; sourceTree = "<group>"; };
 		224E4A222B519B3100F92F26 /* FullScreenImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenImageVC.swift; sourceTree = "<group>"; };
 		224E4A242B52E6A000F92F26 /* HistoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryVC.swift; sourceTree = "<group>"; };
@@ -77,6 +79,10 @@
 		22AB22912B501D030046C991 /* SFPRODISPLAYULTRALIGHTITALIC.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = SFPRODISPLAYULTRALIGHTITALIC.OTF; sourceTree = "<group>"; };
 		22AB22922B501D030046C991 /* SFPRODISPLAYTHINITALIC.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = SFPRODISPLAYTHINITALIC.OTF; sourceTree = "<group>"; };
 		22AB22932B501D100046C991 /* SFPRODISPLAYSEMIBOLDITALIC.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = SFPRODISPLAYSEMIBOLDITALIC.OTF; sourceTree = "<group>"; };
+		22ACD4982B5543710046DF8A /* RoverModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoverModel.swift; sourceTree = "<group>"; };
+		22ACD49A2B5543800046DF8A /* CameraModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModel.swift; sourceTree = "<group>"; };
+		22ACD49C2B5543990046DF8A /* PhotoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoModel.swift; sourceTree = "<group>"; };
+		22ACD49E2B5543AA0046DF8A /* MarsRoverResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarsRoverResponseModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,7 +141,10 @@
 		224E4A172B505C2300F92F26 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				224E4A182B51696700F92F26 /* QueryModel.swift */,
+				22ACD4982B5543710046DF8A /* RoverModel.swift */,
+				22ACD49A2B5543800046DF8A /* CameraModel.swift */,
+				22ACD49C2B5543990046DF8A /* PhotoModel.swift */,
+				22ACD49E2B5543AA0046DF8A /* MarsRoverResponseModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -342,22 +351,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22ACD49F2B5543AA0046DF8A /* MarsRoverResponseModel.swift in Sources */,
+				22ACD4992B5543710046DF8A /* RoverModel.swift in Sources */,
 				22AB22872B5017AC0046C991 /* UIColor_HEX.swift in Sources */,
 				224E4A392B544F3D00F92F26 /* RealmService.swift in Sources */,
 				224E4A232B519B3100F92F26 /* FullScreenImageVC.swift in Sources */,
 				22AB22832B5017200046C991 /* DesignSystem.swift in Sources */,
 				224E4A2B2B53165A00F92F26 /* PickerWithToolbar.swift in Sources */,
-				224E4A192B51696700F92F26 /* QueryModel.swift in Sources */,
 				224E4A2F2B54204D00F92F26 /* CustomDatePicker.swift in Sources */,
 				224E4A272B52EC9600F92F26 /* HistoryCardTVC.swift in Sources */,
 				227648F82B500DC5001453CB /* MainVC.swift in Sources */,
 				224E4A322B544E0C00F92F26 /* RealmHistoryService.swift in Sources */,
+				22ACD49B2B5543800046DF8A /* CameraModel.swift in Sources */,
 				227648F42B500DC5001453CB /* AppDelegate.swift in Sources */,
 				224E4A112B50579E00F92F26 /* Methods.swift in Sources */,
 				224E4A1F2B516F8400F92F26 /* MarsAPIService.swift in Sources */,
 				224E4A252B52E6A000F92F26 /* HistoryVC.swift in Sources */,
 				224E4A162B505A3700F92F26 /* CardTVC.swift in Sources */,
 				227648F62B500DC5001453CB /* SceneDelegate.swift in Sources */,
+				22ACD49D2B5543990046DF8A /* PhotoModel.swift in Sources */,
 				224E4A292B5312C400F92F26 /* UIView_SHADOW.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
